@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { AddExpenseDialog } from "@/components/add-expense-dialog";
 import { ExpensesList } from "@/components/expenses-list";
+import { CategoryFilter } from "@/components/category-filter";
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -23,9 +29,17 @@ export default function Home() {
             <AddExpenseDialog />
           </section>
 
+          {/* Category Filter */}
+          <section>
+            <CategoryFilter
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+          </section>
+
           {/* Expenses List Section */}
           <section>
-            <ExpensesList />
+            <ExpensesList selectedCategory={selectedCategory} />
           </section>
 
           {/* Category Summary Section */}

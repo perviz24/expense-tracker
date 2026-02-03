@@ -9,7 +9,11 @@ import { Trash2 } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
 import { toast } from "sonner";
 
-export function ExpensesList() {
+interface ExpensesListProps {
+  selectedCategory: string;
+}
+
+export function ExpensesList({ selectedCategory }: ExpensesListProps) {
   const expenses = useQuery(api.expenses.getExpenses);
   const deleteExpense = useMutation(api.expenses.deleteExpense);
 
@@ -52,12 +56,20 @@ export function ExpensesList() {
     );
   }
 
-  if (expenses.length === 0) {
+  // Filter expenses by category
+  const filteredExpenses =
+    selectedCategory === "All"
+      ? expenses
+      : expenses.filter((expense) => expense.category === selectedCategory);
+
+  if (filteredExpenses.length === 0) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
           <p className="text-muted-foreground">
-            No expenses yet. Click "Add Expense" to get started.
+            {selectedCategory === "All"
+              ? "No expenses yet. Click \"Add Expense\" to get started."
+              : `No expenses in ${selectedCategory} category.`}
           </p>
         </CardContent>
       </Card>
@@ -66,7 +78,7 @@ export function ExpensesList() {
 
   return (
     <div className="space-y-4">
-      {expenses.map((expense) => (
+      {filteredExpenses.map((expense) => (
         <Card key={expense._id}>
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
