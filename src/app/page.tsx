@@ -1,4 +1,5 @@
 import { AddExpenseDialog } from "@/components/add-expense-dialog";
+import { ExpensesList } from "@/components/expenses-list";
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
 
           {/* Expenses List Section */}
           <section>
-            <p className="text-muted-foreground">Expenses list will go here</p>
+            <ExpensesList />
           </section>
 
           {/* Category Summary Section */}
