@@ -1,3 +1,5 @@
+import { AddExpenseDialog } from "@/components/add-expense-dialog";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
@@ -10,8 +12,14 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
           {/* Add Expense Section */}
-          <section>
-            <p className="text-muted-foreground">Add expense form will go here</p>
+          <section className="flex justify-between items-center">
+            <div>
+              <h2 className="text-lg font-semibold">Your Expenses</h2>
+              <p className="text-sm text-muted-foreground">
+                Track and manage your spending
+              </p>
+            </div>
+            <AddExpenseDialog />
           </section>
 
           {/* Expenses List Section */}
