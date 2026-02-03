@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 const CATEGORIES = [
   "Food",
@@ -38,12 +41,42 @@ export function AddExpenseDialog() {
     new Date().toISOString().split("T")[0]
   );
   const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const addExpense = useMutation(api.expenses.addExpense);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Wire up to Convex mutation
-    console.log({ amount, category, date, description });
-    setOpen(false);
+
+    if (!category) {
+      toast.error("Please select a category");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await addExpense({
+        amount: parseFloat(amount),
+        category,
+        date: new Date(date).getTime(),
+        description: description || undefined,
+      });
+
+      toast.success("Expense added successfully!");
+
+      // Reset form
+      setAmount("");
+      setCategory("");
+      setDate(new Date().toISOString().split("T")[0]);
+      setDescription("");
+      setOpen(false);
+    } catch (error) {
+      toast.error("Failed to add expense");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -73,12 +106,18 @@ export function AddExpenseDialog() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="category">Category</Label>
-            <Select value={category} onValueChange={setCategory} required>
+            <Select
+              value={category}
+              onValueChange={setCategory}
+              required
+              disabled={isSubmitting}
+            >
               <SelectTrigger id="category">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
@@ -100,6 +139,7 @@ export function AddExpenseDialog() {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -111,11 +151,12 @@ export function AddExpenseDialog() {
               placeholder="e.g., Lunch at cafe"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            Add Expense
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Adding..." : "Add Expense"}
           </Button>
         </form>
       </DialogContent>

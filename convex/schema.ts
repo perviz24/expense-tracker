@@ -8,5 +8,5 @@ export default defineSchema({
     date: v.number(),
     description: v.optional(v.string()),
     createdAt: v.number(),
-  }).index("by_creation_time", ["createdAt"]),
+  }).index("by_created_at", ["createdAt"]),
 });
