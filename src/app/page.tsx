@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AddExpenseDialog } from "@/components/add-expense-dialog";
 import { ExpensesList } from "@/components/expenses-list";
 import { CategoryFilter } from "@/components/category-filter";
+import { CategorySummary } from "@/components/category-summary";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -29,6 +30,11 @@ export default function Home() {
             <AddExpenseDialog />
           </section>
 
+          {/* Category Summary */}
+          <section>
+            <CategorySummary />
+          </section>
+
           {/* Category Filter */}
           <section>
             <CategoryFilter
@@ -40,11 +46,6 @@ export default function Home() {
           {/* Expenses List Section */}
           <section>
             <ExpensesList selectedCategory={selectedCategory} />
-          </section>
-
-          {/* Category Summary Section */}
-          <section>
-            <p className="text-muted-foreground">Category summary will go here</p>
           </section>
         </div>
       </main>
